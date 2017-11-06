@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/widget_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NAVER ENDIC"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/widget_btn_1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Search" />
+
+</LinearLayout>
