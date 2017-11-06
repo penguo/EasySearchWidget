@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.pepg.easysearchwidget.NewActivity"
     android:initialLayout="@layout/widget_layout"
     android:minHeight="72dp"
-    android:minWidth="146dp"
+    android:minWidth="216dp"
     android:previewImage="@drawable/ic_add"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="60000" />
+    android:updatePeriodMillis="360000" />

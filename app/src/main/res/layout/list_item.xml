@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -8,9 +9,17 @@
     android:padding="5dp">
 
     <TextView
-        android:id="@+id/item_tv"
+        android:id="@+id/item_tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/item_tv_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:text="TextView"
+        android:textSize="21sp" />
 </LinearLayout>

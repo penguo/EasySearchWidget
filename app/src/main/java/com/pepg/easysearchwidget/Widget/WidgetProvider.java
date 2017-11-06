@@ -7,13 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.pepg.easysearchwidget.DBManager;
 import com.pepg.easysearchwidget.MainActivity;
+import com.pepg.easysearchwidget.NewActivity;
 import com.pepg.easysearchwidget.R;
+import com.pepg.easysearchwidget.SearchActivity;
 
 /**
  * Created by pengu on 2017-11-02.
  */
 public class WidgetProvider extends AppWidgetProvider {
+
+    Intent intent;
+    DBManager dbManager;
 
     /**
      * 브로드캐스트를 수신할때, Override된 콜백 메소드가 호출되기 직전에 호출됨
@@ -31,10 +37,15 @@ public class WidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         int appId;
+        dbManager = new DBManager(context, "SearchLink.db", null, 1);
+
         for (int i = 0; i < appWidgetIds.length; i++) {
             appId = appWidgetIds[i];
-            Intent intent = new Intent(context, MainActivity.class);
+            intent = new Intent(context, SearchActivity.class);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
+            dbManager.getWidgetValue(i + 1);
+            views.setTextViewText(R.id.widget_tv_title, dbManager.DATA_NAME);
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
@@ -42,7 +53,6 @@ public class WidgetProvider extends AppWidgetProvider {
                     0,
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
-
             views.setOnClickPendingIntent(R.id.widget_btn_1, pendingIntent);
             appWidgetManager.updateAppWidget(appId, views);
         }
