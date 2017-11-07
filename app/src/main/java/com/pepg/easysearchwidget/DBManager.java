@@ -13,7 +13,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     Cursor cursor;
     public static String DATA_NAME, DATA_LINK;
-    public static int DATA_LINKNUM, DATA_WIDGETID, DATA_ID;
+    public static int DATA_WIDGETLINKNUM, DATA_WIDGETID, DATA_position;
 
 
     public DBManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -23,12 +23,13 @@ public class DBManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(" CREATE TABLE LIST ( " +
-                " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                " _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                " _position INTEGER, " +
                 " NAME TEXT," +
                 " LINK TEXT);");
         db.execSQL(" CREATE TABLE WIDGET ( " +
-                " _id INTEGER PRIMARY KEY AUTOINCREMENT , " +
-                " WIDGETID INTEGER , " +
+                " _widgetID INTEGER PRIMARY KEY, " +
+                " _position INTEGER, " +
                 " LINKNUM INTEGER);");
         addDefaultValue(db);
     }
@@ -59,6 +60,7 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(" INSERT INTO LIST VALUES (" +
                 "null," +
+                "null," +
                 "'" + name + "'," +
                 "'" + link + "');");
         db.close();
@@ -82,8 +84,8 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public void addDefaultValue(SQLiteDatabase db) {
-        db.execSQL(" INSERT INTO LIST VALUES ( 1, '네이버 영어사전', 'http://endic.naver.com/' );");
-        db.execSQL(" INSERT INTO LIST VALUES ( 2, '나무위키', 'http://namu.wiki' );");
+        db.execSQL(" INSERT INTO LIST VALUES ( null, null, '네이버 영어사전', 'http://endic.naver.com/' );");
+        db.execSQL(" INSERT INTO LIST VALUES ( null, null, '나무위키', 'http://namu.wiki' );");
 
     }
 
@@ -96,18 +98,37 @@ public class DBManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void getWidgetValue(int widgetId) {
-        SQLiteDatabase db = getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM WIDGET WHERE _id = '" + widgetId + "';", null);
-        while (cursor.moveToNext()) {
-            DATA_ID = cursor.getInt(0);
-            DATA_WIDGETID = cursor.getInt(1);
-            DATA_LINKNUM = cursor.getInt(2);
+    public void setWidgetPosition() {
+        SQLiteDatabase dbR = getReadableDatabase();
+        SQLiteDatabase dbW = getWritableDatabase();
+        dbW.execSQL("UPDATE WIDGET SET _position = -1;");
+        int i = 0;
+        cursor = dbR.rawQuery("SELECT _widgetID FROM WIDGET;", null);
+        while(cursor.moveToNext()){
+            dbW.execSQL("UPDATE TODOLIST SET _position = " + i + " WHERE _widgetID = " + cursor.getInt(0) + ";");
+            i++;
         }
-        cursor = db.rawQuery("SELECT * FROM LIST WHERE _id = '" + DATA_LINKNUM + "';", null);
+    }
+
+    public void getWidgetValue(int position) {
+        DATA_WIDGETID = 0;
+        DATA_WIDGETLINKNUM = 0;
+        DATA_NAME = "";
+        DATA_LINK = "";
+        SQLiteDatabase db = getReadableDatabase();
+        cursor = db.rawQuery("SELECT * FROM WIDGET WHERE _position = '" + position + "';", null);
         while (cursor.moveToNext()) {
-            DATA_NAME = cursor.getString(1);
-            DATA_LINK = cursor.getString(2);
+            DATA_WIDGETID = cursor.getInt(0);
+            DATA_WIDGETLINKNUM = cursor.getInt(1);
+        }
+        if (DATA_WIDGETID != 0) {
+            cursor = db.rawQuery("SELECT * FROM LIST WHERE _id = '" + DATA_WIDGETLINKNUM + "';", null);
+            while (cursor.moveToNext()) {
+                DATA_NAME = cursor.getString(1);
+                DATA_LINK = cursor.getString(2);
+            }
+        } else {
+            DATA_NAME = "NEW WIDGET";
         }
         cursor.close();
         db.close();

@@ -34,7 +34,7 @@ public class NewActivity extends AppCompatActivity {
 
         rcv = (RecyclerView) findViewById(R.id.new_rcv);
         rcv.setLayoutManager(new LinearLayoutManager(this));
-        rcvAdapter = new RcvAdapter(dbManager, this, 1);
+        rcvAdapter = new RcvAdapter(dbManager, this, "New");
         rcv.setAdapter(rcvAdapter);
     }
 

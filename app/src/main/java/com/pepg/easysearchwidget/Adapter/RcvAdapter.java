@@ -17,6 +17,8 @@ import com.pepg.easysearchwidget.R;
 
 import static com.pepg.easysearchwidget.DBManager.DATA_LINK;
 import static com.pepg.easysearchwidget.DBManager.DATA_NAME;
+import static com.pepg.easysearchwidget.DBManager.DATA_WIDGETID;
+import static com.pepg.easysearchwidget.DBManager.DATA_WIDGETLINKNUM;
 
 /**
  * Created by pengu on 2017-08-10.
@@ -25,10 +27,9 @@ import static com.pepg.easysearchwidget.DBManager.DATA_NAME;
 public class RcvAdapter extends RecyclerView.Adapter<RcvAdapter.ViewHolder> {
     private Activity activity;
     private DBManager dbManager;
-    private int type;
-    public int id;
+    private String type;
 
-    public RcvAdapter(DBManager dbManager, Activity activity, int type) {
+    public RcvAdapter(DBManager dbManager, Activity activity, String type) {
         this.dbManager = dbManager;
         this.activity = activity;
         this.type = type;
@@ -56,28 +57,33 @@ public class RcvAdapter extends RecyclerView.Adapter<RcvAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
+        dbManager.setWidgetPosition();
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        id = position + 1;
-        dbManager.getValue(id);
+        if (type.equals("WidgetList")) {
+            dbManager.getWidgetValue(position);
+            holder.tvTitle.setText(DATA_WIDGETID);
+            holder.tvLink.setText(DATA_WIDGETLINKNUM);
+        } else {
+            dbManager.getValue(position);
+            holder.tvTitle.setText(DATA_NAME);
+            holder.tvLink.setText(DATA_LINK);
+        }
 
-        holder.tvTitle.setText(DATA_NAME);
-        holder.tvLink.setText(DATA_LINK);
         holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                id = position + 1;
-                dbManager.getValue(id);
+                dbManager.getValue(position);
                 switch (type) {
-                    case (0): // MainActivity
-
+                    case ("Main"): // MainActivity
+                        Toast.makeText(activity, "BOOM!!", Toast.LENGTH_SHORT).show();
                         break;
-                    case (1): // NewActivity
-                        newActivity(id);
-                        Toast.makeText(activity, id+"", Toast.LENGTH_SHORT).show();
+                    case ("New"): // NewActivity
+                        newActivity(position);
+                        Toast.makeText(activity, position + "", Toast.LENGTH_SHORT).show();
                         ((NewActivity) activity).getWidget();
                         break;
                 }
@@ -86,8 +92,7 @@ public class RcvAdapter extends RecyclerView.Adapter<RcvAdapter.ViewHolder> {
     }
 
     private void removeItemView(int position) {
-        id = position + 1;
-        dbManager.delete(id);
+        dbManager.delete(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, dbManager.getSize()); // 지워진 만큼 다시 채워넣기.
     }

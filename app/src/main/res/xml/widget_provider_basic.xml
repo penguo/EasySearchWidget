@@ -6,4 +6,4 @@
     android:minWidth="216dp"
     android:previewImage="@drawable/ic_add"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="360000" />
+    android:updatePeriodMillis="1000" />

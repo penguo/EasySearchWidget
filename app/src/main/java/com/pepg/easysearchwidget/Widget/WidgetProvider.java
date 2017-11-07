@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.pepg.easysearchwidget.DBManager;
@@ -44,7 +45,8 @@ public class WidgetProvider extends AppWidgetProvider {
             intent = new Intent(context, SearchActivity.class);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            dbManager.getWidgetValue(i + 1);
+            dbManager.getWidgetValue(appId);
+            Log.e("check",appId+" "+dbManager.DATA_NAME);
             views.setTextViewText(R.id.widget_tv_title, dbManager.DATA_NAME);
 
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
